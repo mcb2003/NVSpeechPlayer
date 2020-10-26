@@ -16,7 +16,10 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 #define NVDAHELPER_LOCK_H
 
 #include <cassert>
-#include <windows.h>
+
+#ifdef WIN32
+	#include <windows.h>
+#endif
 
 /**
  * A class that provides a locking mechonism on objects.
@@ -24,30 +27,40 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 class LockableObject {
 	private:
-	CRITICAL_SECTION _cs;
+	#ifdef WIN32
+		CRITICAL_SECTION _cs;
+	#endif
 
 	public:
 
 	LockableObject() {
-		InitializeCriticalSection(&_cs);
+		#ifdef WIN32
+			InitializeCriticalSection(&_cs);
+		#endif
 	}
 
 	virtual ~LockableObject() {
-		DeleteCriticalSection(&_cs);
+		#ifdef WIN32
+			DeleteCriticalSection(&_cs);
+		#endif
 	}
 
 /**
  * Acquires access (possibly waighting until its free).
  */
 	void acquire() {
-	EnterCriticalSection(&_cs);
-}
+		#ifdef WIN32
+			EnterCriticalSection(&_cs);
+	#endif
+	}
 
 /**
  * Releases exclusive access of the object.
  */
 	void release() {
-		LeaveCriticalSection(&_cs);
+		#ifdef WIN32
+			LeaveCriticalSection(&_cs);
+		#endif
 	}
 
 };
@@ -63,11 +76,20 @@ class LockableAutoFreeObject: private LockableObject {
 	protected:
 
 long incRef() {
-		return InterlockedIncrement(&_refCount);
+		#ifdef WIN32
+			return InterlockedIncrement(&_refCount);
+		#else
+			return ++_refCount;
+		#endif
 	}
 
 	long decRef() {
-		long refCount=InterlockedDecrement(&_refCount);
+		#ifdef WIN32
+			long refCount=InterlockedDecrement(&_refCount);
+		#else
+			long refCount=--_refCount;
+		#endif
+
 		if(refCount==0) {
 			delete this;
 		}

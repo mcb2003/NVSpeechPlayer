@@ -12,6 +12,8 @@ This license can be found at:
 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 */
 
+#include <cmath>
+#include <cstring>
 #include <queue>
 #include "utils.h"
 #include "frame.h"

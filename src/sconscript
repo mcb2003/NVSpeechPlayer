@@ -13,21 +13,37 @@
 ###
 
 Import(['env'])
+import platform
 
 env=env.Clone()
 
-env.Append(CPPFLAGS=['/EHsc'])
 env.Append(CPPDEFINES='UNICODE')
 env.Append(CPPPATH=Dir('.'))
-if env['release']:
-	env.Append(CPPDEFINES=['NDEBUG'])
-	env.Append(CCFLAGS=['/O2','/MT','/GL'])
-	env.Append(LINKFLAGS='/release')
+
+if platform.system()=='windows':
+	env.Append(CPPFLAGS=['/EHsc'])
+	if env['release']:
+		env.Append(CPPDEFINES=['NDEBUG'])
+		env.Append(CCFLAGS=['/O2','/MT','/GL'])
+		env.Append(LINKFLAGS='/release')
+	else:
+		env.Append(PDB='${TARGET}.pdb')
+		env.Append(CPPDEFINES=['_DEBUG'])
+		env.Append(CCFLAGS=['/Od','/MTd','/RTCsu'])
+		env.Append(CPPDEFINES=['_DEBUG'])
 else:
-	env.Append(PDB='${TARGET}.pdb')
-	env.Append(CPPDEFINES=['_DEBUG'])
-	env.Append(CCFLAGS=['/Od','/MTd','/RTCsu'])
-	env.Append(CPPDEFINES=['_DEBUG'])
+	if env['release']:
+		env.Append(CPPDEFINES=['NDEBUG'])
+		env.Append(CCFLAGS=['-O2'])
+
+if platform.system()=='windows':
+	include_def=['speechPlayer.def']
+	libs = [
+	'winmm',
+	]
+else:
+	include_def=[]
+	libs=[]
 
 speechPlayerLib=env.SharedLibrary(
 	target='speechPlayer',
@@ -35,11 +51,8 @@ speechPlayerLib=env.SharedLibrary(
 	'speechPlayer.cpp',
 	'speechWaveGenerator.cpp',
 	'frame.cpp',
-	'speechPlayer.def',
-	],
-	LIBS=[
-	'winmm',
-	],
+	]+include_def,
+	LIBS=libs,
 )
 
 Return(['speechPlayerLib'])

@@ -12,9 +12,12 @@ This license can be found at:
 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 */
 
+#include <algorithm>
 #include "frame.h"
 #include "speechWaveGenerator.h"
 #include "speechPlayer.h"
+
+using namespace std;
 
 typedef struct {
 	int sampleRate;
@@ -33,7 +36,7 @@ speechPlayer_handle_t speechPlayer_initialize(int sampleRate) {
 
 void speechPlayer_queueFrame(speechPlayer_handle_t playerHandle, speechPlayer_frame_t* framePtr, unsigned int minFrameDuration, unsigned int fadeDuration, int userIndex, bool purgeQueue) { 
 	speechPlayer_handleInfo_t* playerHandleInfo=(speechPlayer_handleInfo_t*)playerHandle;
-	playerHandleInfo->frameManager->queueFrame(framePtr,minFrameDuration,max(fadeDuration,1),userIndex,purgeQueue);
+	playerHandleInfo->frameManager->queueFrame(framePtr,minFrameDuration,max(fadeDuration,1U),userIndex,purgeQueue);
 }
 
 int speechPlayer_synthesize(speechPlayer_handle_t playerHandle, unsigned int sampleCount, sample* sampleBuf) {

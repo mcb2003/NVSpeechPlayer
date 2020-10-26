@@ -18,7 +18,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 #include <float.h>
 
 inline double calculateValueAtFadePosition(double oldVal, double newVal, double curFadeRatio) {
-	if(_isnan(newVal)) return oldVal;
+	if(__isnan(newVal)) return oldVal;
 	return oldVal+((newVal-oldVal)*curFadeRatio);
 }
 
