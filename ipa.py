@@ -15,7 +15,7 @@
 import os
 import itertools
 import codecs
-from . import speechPlayer
+import speechPlayer
 
 dataPath=os.path.join(os.path.dirname(__file__),'data.py')
 

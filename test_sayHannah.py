@@ -9,7 +9,7 @@ from lavPlayer import LavPlayer
 speed=1
 
 player=speechPlayer.SpeechPlayer(22050)
-lavPlayer=LavPlayer(player,22050)
+lavPlayer=LavPlayer(player,22050,'test.wav')
 
 frame=speechPlayer.Frame()
 frame.outputGain=1.0
@@ -29,4 +29,4 @@ ipa.setFrame(frame,'ɑ')
 frame.voicePitch=90
 player.queueFrame(frame,80/speed,40/speed)
 player.queueFrame(None,40/speed,40/speed)
-time.sleep(10)
+lavPlayer.generateAudio()

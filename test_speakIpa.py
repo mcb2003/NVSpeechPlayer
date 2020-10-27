@@ -18,11 +18,11 @@ import ipa
 from lavPlayer import LavPlayer
 
 player=speechPlayer.SpeechPlayer(22050)
-lavPlayer=LavPlayer(player,22050)
+lavPlayer=LavPlayer(player,22050,'test.wav')
 time.sleep(0.05)
 text=codecs.open(sys.argv[1],'r','utf8').read()
 for line in text.splitlines():
 	for args in ipa.generateFramesAndTiming(line.strip(),speed=0.6):
 		player.queueFrame(*args)
 	player.queueFrame(None,150,0)
-time.sleep(300)
+lavPlayer.generateAudio()

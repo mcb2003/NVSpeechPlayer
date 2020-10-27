@@ -22,7 +22,7 @@ import ipa
 from lavPlayer import LavPlayer
 
 player=speechPlayer.SpeechPlayer(22050)
-lavPlayer=LavPlayer(player,22050)
+lavPlayer=LavPlayer(player,22050,'test.wav')
 
 frame=speechPlayer.Frame()
 frame.preFormantGain=1.0
@@ -41,6 +41,7 @@ for firstVowel,lastVowel in itertools.product(vowels,vowels):
 	ipa.setFrame(frame,lastVowel)
 	player.queueFrame(frame,500,400)
 	player.queueFrame(None,50,50)
+	lavPlayer.generateAudio()
 	input()
 del player
 
