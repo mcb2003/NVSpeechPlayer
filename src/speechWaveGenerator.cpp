@@ -194,7 +194,7 @@ class SpeechWaveGeneratorImpl: public SpeechWaveGenerator {
 	SpeechWaveGeneratorImpl(int sr): sampleRate(sr), voiceGenerator(sr), fricGenerator(), cascade(sr), parallel(sr), frameManager(NULL) {
 	}
 
-	unsigned int generate(const unsigned int sampleCount, sample* sampleBuf) {
+	virtual unsigned int generate(const unsigned int sampleCount, sample* sampleBuf) {
 		if(!frameManager) return 0; 
 		double val=0;
 		for(unsigned int i=0;i<sampleCount;++i) {
@@ -213,7 +213,7 @@ class SpeechWaveGeneratorImpl: public SpeechWaveGenerator {
 		return sampleCount;
 	}
 
-	void setFrameManager(FrameManager* frameManager) {
+	virtual void setFrameManager(FrameManager* frameManager) {
 		this->frameManager=frameManager;
 	}
 

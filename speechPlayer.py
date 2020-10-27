@@ -13,7 +13,9 @@
 ###
 
 from ctypes import *
+
 import os
+import platform
 
 speechPlayer_frameParam_t=c_double
 
@@ -39,7 +41,10 @@ class Frame(Structure):
 		'endVoicePitch',
 	]]
 
-dllPath=os.path.join(os.path.dirname(__file__),'speechPlayer.dll')
+if platform.system()=='windows':
+	dllPath=os.path.join(os.path.dirname(__file__),'speechPlayer.dll')
+else:
+	dllPath=os.path.join(os.path.dirname(__file__),'libspeechPlayer.so')
 
 class SpeechPlayer(object):
 
