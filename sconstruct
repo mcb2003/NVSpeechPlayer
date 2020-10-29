@@ -13,6 +13,7 @@
 ###
 
 import os
+import platform
 
 gitRev=None
 gitDir = os.path.join(Dir('#').abspath,'.git')
@@ -86,9 +87,14 @@ env["BUILDERS"]["ZipArchive"] = Builder(action=ZipArchiveAction)
 
 speechPlayerLib=env.SConscript('src/sconscript',exports=['env'],variant_dir='build/speechPlayerLib')
 env.Clean(speechPlayerLib,'build')
-nvdaAddon=env.SConscript('nvdaAddon/sconscript',exports=['env'],variant_dir='build/nvdaAddon')
-installed=env.Install('.',[speechPlayerLib,nvdaAddon])
 
-env.Alias("nvdaAddon",nvdaAddon)
+# Only build the NVDA addon on Windows
+if platform.system() == "windows":
+    nvdaAddon=env.SConscript('nvdaAddon/sconscript',exports=['env'],variant_dir='build/nvdaAddon')
+    installed=env.Install('.',[speechPlayerLib,nvdaAddon])
+    installed=env.Install('.',[speechPlayerLib,nvdaAddon])
+    env.Alias("nvdaAddon",nvdaAddon)
+else:
+    installed=env.Install('.',[speechPlayerLib])
 
 env.Default([installed])
